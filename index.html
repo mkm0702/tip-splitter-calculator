@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splitter - Tip Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #c5e4e7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .logo {
+            color: #5e7a7d;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .calculator {
+            background-color: #ffffff;
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(79, 166, 175, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+          
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-label {
+            color: #5e7a7d;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .input-field {
+            background-color: #f3f9fa;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            padding: 12px 15px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: right;
+            color: #00494d;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #26c0ab;
+        }
+
+        .input-field.error {
+            border-color: #e17457;
+        }
+
+        .dollar-icon {
+            position: relative;
+        }
+
+        .dollar-icon::before {
+            content: '$';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f9c9f;
+            font-size: 24px;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .people-icon {
+            position: relative;
+        }
+
+        .people-icon::before {
+            content: '👤';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        .tip-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .tip-btn {
+            background-color: #00494d;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .tip-btn:hover {
+            background-color: #26c0ab;
+        }
+
+        .tip-btn.selected {
+            background-color: #26c0ab;
+        }
+
+        .custom-input {
+            background-color: #f3f9fa;
+            width: 100%;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            color: #00494d;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .custom-input:focus {
+            border-color: #26c0ab;
+        }
+
+        .custom-input::placeholder {
+            color: #7f9c9f;
+        }
+
+        .error-message {
+            color: #e17457;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .result-section {
+            background-color: #00494d;
+            border-radius: 15px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .result-label {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .result-sublabel {
+            color: #7f9c9f;
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .result-amount {
+            color: #26c0ab;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .reset-btn {
+            background-color: #26c0ab;
+            color: #00494d;
+            border: none;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+            margin-top: auto;
+        }
+
+        .reset-btn:hover {
+            opacity: 0.8;
+        }
+
+        .reset-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .selected{
+          background-color: #26c0ab;
+        }
+
+        @media (max-width: 768px) {
+            .calculator {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 20px;
+            }
+
+            .logo {
+                font-size: 20px;
+                letter-spacing: 6px;
+            }
+
+            .result-amount {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        SPLI<br>TTER
+    </div>
+    
+    <div class="calculator">
+        <div class="input-section">
+            <div class="input-group">
+                <label class="input-label">Bill</label>
+                <div class="dollar-icon">
+                    <input type="number" class="input-field" id="billAmount" placeholder="0">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Select Tip %</label>
+                <div class="tip-buttons">
+                    <button class="tip-btn" data-tip="5">5%</button>
+                    <button class="tip-btn" data-tip="10">10%</button>
+                    <button class="tip-btn" data-tip="15">15%</button>
+                    <button class="tip-btn" data-tip="25">25%</button>
+                    <button class="tip-btn" data-tip="50">50%</button>
+                    <input type="number" class="custom-input" id="customTip"  placeholder="Custom">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Number of People</label>
+                <div class="people-icon">
+                    <input type="number" class="input-field" id="numberOfPeople" placeholder="0" min="1">
+                </div>
+                <div class="error-message" id="errorMessage" style="display: none;">Can't be zero</div>
+            </div>
+        </div>
+
+        <div class="result-section">
+            <div>
+                <div class="result-item">
+                    <div>
+                        <div class="result-label">Tip Amount</div>
+                        <div class="result-sublabel">/ person</div>
+                    </div>
+                    <div class="result-amount" id="tipPerPerson">$0.00</div>
+                </div>
+
+                <div class="result-item">
+                    <div>
+                        <div class="result-label">Total</div>
+                        <div class="result-sublabel">/ person</div>
+                    </div>
+                    <div class="result-amount" id="totalPerPerson">$0.00</div>
+                </div>
+            </div>
+
+            <button class="reset-btn" id="resetBtn" >RESET</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
